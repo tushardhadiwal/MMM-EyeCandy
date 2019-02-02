@@ -99,11 +99,11 @@ Module.register("MMM-EyeCandy", {
 		var image = document.createElement("img");
         var getTimeStamp = new Date();
 		if (this.config.ownImagePath != '') {
-			image.src = this.url + "?seed=" + getTimeStamp;
+			image.src = this.url //+ "?seed=" + getTimeStamp;
 			image.className = "photo";
 			image.style.maxWidth = this.config.maxWidth;
 		} else if (this.config.style != ''){
-			image.src = this.url + "?seed=" + getTimeStamp;
+			image.src = this.url //+ "?seed=" + getTimeStamp;
 			image.className = "photo";
 			image.style.maxWidth = this.config.maxWidth;
 		}
@@ -121,13 +121,22 @@ Module.register("MMM-EyeCandy", {
 	
 	/////  Add this function to the modules you want to control with voice //////
 
-    notificationReceived: function(notification, payload) {
-        if (notification === 'HIDE_EYECANDY') {
+    notificationReceived: function(notification, payload, sender) {
+        if (notification === 'HIDE_CROWD_COUNT') {
             this.hide();
-        }  else if (notification === 'SHOW_EYECANDY') {
+        }  else if (notification === 'SHOW_CROWD_COUNT') {
             this.show(1000);
         }
-            
+        if (notification === 'SHOW_NEWIMAGE')
+        {
+            Log.log('Notification Received from ' + sender.name + ' containing payload : ' + payload.pay);
+            this.url=payload.pay;
+            this.updateDom();
+		} 
+		if ( notification === 'DOM_OBJECTS_CREATED') {
+			//now the Dom is ready; you can call hide() or show().
+			 this.hide(0);
+		  }           
     },
 
 });
